@@ -1,11 +1,10 @@
 import logging
 import os
-import uuid
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.edge.options import Options as EdgeOptions
-
+import tempfile
 from page_objects.home_page import HomePage
 
 logging.basicConfig(level=logging.INFO)
@@ -35,28 +34,32 @@ def browser(request):
         options = ChromeOptions()
         if headless:
             options.add_argument("--headless=new")
-        logger.info(
-            f"инициализация {browser_name} браузера в режиме {'headless' if headless else 'normal'}"
-        )
+        options.add_argument('--disable-gpu')
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+
+        # Уникальная папка для профиля
+        tmp_dir = tempfile.mkdtemp()
+        options.add_argument(f"--user-data-dir={tmp_dir}")
+
+        logger.info(f"инициализация {browser_name} браузера в режиме {'headless' if headless else 'normal'}")
         driver = webdriver.Chrome(options=options)
+
     elif browser_name in ["edge", "ed"]:
         options = EdgeOptions()
         if headless:
             options.add_argument("--headless")
-        logger.info(
-            f"Инициализация {browser_name} браузера в режиме {'headless' if headless else 'normal'}"
-        )
+        logger.info(f"инициализация {browser_name} браузера в режиме {'headless' if headless else 'normal'}")
         driver = webdriver.Edge(options=options)
     else:
         raise ValueError(f"Браузер {browser_name} не поддерживается")
 
     driver.maximize_window()
-    request.addfinalizer(driver.close)
 
-    # logger.info(f"Открытие адреса: {url}")
-    # driver.get(url)
-    # driver.url = url
+    def fin():
+        driver.quit()
 
+    request.addfinalizer(fin)
     return driver
 
 
