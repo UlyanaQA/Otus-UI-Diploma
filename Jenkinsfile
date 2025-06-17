@@ -16,7 +16,10 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                sh '. /var/jenkins_home/venv/bin/activate && python3 -m pytest test_search_function.py -v --alluredir=./allure-results'
+                sh '''
+                    . /var/jenkins_home/venv/bin/activate
+                    python3 -m pytest tests/ -v --alluredir=./allure-results
+                '''
             }
         }
 
