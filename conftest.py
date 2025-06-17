@@ -5,7 +5,12 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.edge.options import Options as EdgeOptions
 import tempfile
+
+from page_objects.advanced_search_page import AdvancedSearchPage
+from page_objects.categories_page import CategoriesPage
 from page_objects.home_page import HomePage
+from page_objects.russian_interest_page import RussianInterestPage
+from page_objects.onegin_page import OneginPage
 
 logging.basicConfig(level=logging.INFO)
 
@@ -62,7 +67,6 @@ def browser(request):
     request.addfinalizer(fin)
     return driver
 
-
 @pytest.fixture
 def logger(request):
     log_level = request.config.getoption("--log_level")
@@ -77,12 +81,48 @@ def base_url(request) -> str:
 
 
 @pytest.fixture
-def admin_login_page(browser, base_url, logger):
+def home_page(browser, base_url, logger):
     page = HomePage(browser)
-    administration_url = f"{base_url}"
+    homepage_url = f"{base_url}"
 
-    logger.info(f"Открытие страницы админа: {administration_url}")
-    page.open(administration_url)
+    logger.info(f"Открытие домашней страницы: {homepage_url}")
+    page.open(homepage_url)
+    return page
+
+@pytest.fixture
+def categories_page(browser, base_url, logger):
+    page = CategoriesPage(browser)
+    categoriespage_url = f"{base_url}/ebooks/categories"
+
+    logger.info(f"Открытие страницы категорий книг: {categoriespage_url}/ebooks/categories")
+    page.open(categoriespage_url)
+    return page
+
+@pytest.fixture
+def russian_interest_page(browser, base_url, logger):
+    page = RussianInterestPage(browser)
+    russianpage_url = f"{base_url}/ebooks/bookshelf/473"
+
+    logger.info(f"Открытие страницы Russian Interest: {russianpage_url}")
+    page.open(russianpage_url)
+    return page
+
+@pytest.fixture
+def onegin_page(browser, base_url, logger):
+    page = OneginPage(browser)
+    oneginpage_url = f"{base_url}/ebooks/23997"
+
+    logger.info(f"Открытие страницы Russian Interest: {oneginpage_url}")
+    page.open(oneginpage_url)
+    return page
+
+@pytest.fixture
+def advancedsearch_page(browser, base_url, logger):
+    page = AdvancedSearchPage(browser)
+    advancedsearch_url = f"{base_url}/ebooks"
+
+    logger.info(f"Открытие страницы Advanced Search: {advancedsearch_url}")
+    page.open(advancedsearch_url)
     return page
 
 @pytest.hookimpl(hookwrapper=True)

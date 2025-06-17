@@ -1,6 +1,5 @@
 import logging
 from selenium.common import TimeoutException
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -14,14 +13,10 @@ class BasePage:
     def log_action(self, message):
         self.logger.info(message)
 
-    # def open(self, url):
-    #     self.log_action(f"Открытие страницы: {url}")
-    #     self.browser.get(url)
     def open(self, url):
         self.log_action(f"Открытие страницы: {url}")
         self.browser.get(url)
 
-        # Явное ожидание готовности страницы
         try:
             WebDriverWait(self.browser, 15).until(
                 lambda d: d.execute_script("return document.readyState") == "complete"

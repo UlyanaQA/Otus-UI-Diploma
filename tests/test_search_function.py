@@ -3,8 +3,6 @@ import pytest
 from page_objects.home_page import HomePage
 
 
-@allure.feature("Search")
-@allure.story("Тестирование поиска книг")
 @pytest.mark.parametrize("query, expected_result", [
     ("Sherlock Holmes", True),
     ("RandomBook-12345", False)
@@ -21,6 +19,11 @@ def test_search_books(browser, base_url, query, expected_result):
     if expected_result:
         with allure.step("Проверка, что найдены книги"):
             assert home_page.results_contain(), f"Книги '{query}' не найдены"
+
+        if query == "Sherlock Holmes":
+            with allure.step("Проверка названия книги"):
+                assert home_page.check_book_title(), "Название книги 'The Adventures of Sherlock Holmes' не найдено"
+
     else:
         with allure.step("Проверка сообщения 'No results found'"):
             assert home_page.no_results_found(), "Сообщение об отсутствии результатов не отображается"
