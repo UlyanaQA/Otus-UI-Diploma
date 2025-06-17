@@ -33,21 +33,31 @@ def browser(request):
 
     if browser_name in ["chrome", "ch"]:
         options = ChromeOptions()
-        options.add_argument("--no-sandbox")  # Необходимо для контейнеров
-        options.add_argument("--disable-dev-shm-usage")  # Решает проблемы с памятью
-        options.add_argument("--disable-gpu")  # Отключает GPU
-
         if headless:
             options.add_argument("--headless=new")
-
-        logger.info(f"инициализация {browser_name} браузера в режиме {'headless' if headless else 'normal'}")
-
-        # Используем WebDriver Manager для автоматической загрузки драйвера
-        from webdriver_manager.chrome import ChromeDriverManager
-        driver = webdriver.Chrome(
-            service=ChromeService(ChromeDriverManager().install()),
-            options=options
+        logger.info(
+            f"инициализация {browser_name} браузера в режиме {'headless' if headless else 'normal'}"
         )
+        driver = webdriver.Chrome(options=options)
+    elif browser_name in ["edge", "ed"]:
+        options = EdgeOptions()
+        if headless:
+            options.add_argument("--headless")
+        logger.info(
+            f"Инициализация {browser_name} браузера в режиме {'headless' if headless else 'normal'}"
+        )
+        driver = webdriver.Edge(options=options)
+    else:
+        raise ValueError(f"Браузер {browser_name} не поддерживается")
+
+    driver.maximize_window()
+    request.addfinalizer(driver.close)
+
+    # logger.info(f"Открытие адреса: {url}")
+    # driver.get(url)
+    # driver.url = url
+
+    return driver
 
 
 @pytest.fixture
