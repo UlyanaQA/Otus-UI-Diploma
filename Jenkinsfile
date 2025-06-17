@@ -8,6 +8,12 @@ pipeline {
             }
         }
 
+        stage('Clean Allure Results') {
+            steps {
+                sh 'rm -rf allure-results/* || true'
+                    }
+            }
+
         stage('Install System Dependencies') {
             steps {
                 sh '''
