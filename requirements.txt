@@ -1,4 +1,4 @@
 pytest
-requests
 allure-pytest
 selenium==4.21.0
+webdriver-manager==4.0.1
