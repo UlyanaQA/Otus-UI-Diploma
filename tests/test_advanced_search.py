@@ -13,7 +13,7 @@ import pytest
 )
 def test_advanced_search(advancedsearch_page, author, title, subject):
     try:
-        with allure.step("Заполнение формы нового продукта"):
+        with allure.step("Заполнение формы поиска"):
             advancedsearch_page.fill_advanced_search_book(author, title, subject)
 
         with allure.step("Клик на кнопку поиска"):
