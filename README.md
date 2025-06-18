@@ -2,7 +2,7 @@
 
 ## Описание проекта
 
-Тесты написаны с использованием pytest и allure для проверки Project Gutenberg (https://www.gutenberg.org/) - электронной библиотеки
+Frontend-тестирование на основе веб-приложения Project Gutenberg (https://www.gutenberg.org/) - электронной библиотеки
 
 ### Основные разделы тестов
 **test_advanced_search**
