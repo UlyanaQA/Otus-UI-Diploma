@@ -1,15 +1,16 @@
 import allure
 import logging
 
+
 @allure.epic("Страница категорий")
 @allure.feature("Элементы страницы категорий")
 @allure.story("Проверка наличия категории Russian Interest")
 def test_russian_interest(categories_page):
     try:
         with allure.step("Проверка наличия категории Russian Interest"):
-            assert categories_page.is_r_category_present(), (
-                "На странице не найдена категория Russian Interest"
-            )
+            assert (
+                categories_page.is_r_category_present()
+            ), "На странице не найдена категория Russian Interest"
     except AssertionError as e:
         logging.error(f"Ошибка в тесте: {str(e)}")
         allure.attach(

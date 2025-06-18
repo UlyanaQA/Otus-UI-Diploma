@@ -4,8 +4,12 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from page_objects.base_page import BasePage
 
+
 class RussianInterestPage(BasePage):
-    BOOK_TITLE = (By.XPATH, "//span[@class='title' and contains(text(), 'Eugene Oneguine [Onegin]')]")
+    BOOK_TITLE = (
+        By.XPATH,
+        "//span[@class='title' and contains(text(), 'Eugene Oneguine [Onegin]')]",
+    )
     SORT_BY_TITLE = (By.XPATH, '//*[@id="content"]/div[2]/div/ul/li[1]/a/span[2]/span')
 
     def check_book_onegin(self):
@@ -22,4 +26,3 @@ class RussianInterestPage(BasePage):
         """Возвращает список названий книг на странице."""
         book_elements = self.browser.find_elements(By.CSS_SELECTOR, ".booklink .title")
         return [book.text for book in book_elements]
-

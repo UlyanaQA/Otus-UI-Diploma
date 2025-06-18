@@ -17,15 +17,6 @@ class BasePage:
         self.log_action(f"Открытие страницы: {url}")
         self.browser.get(url)
 
-        try:
-            WebDriverWait(self.browser, 15).until(
-                lambda d: d.execute_script("return document.readyState") == "complete"
-            )
-            return True
-        except TimeoutException:
-            self.logger.error(f"Страница {url} не загрузилась")
-            return False
-
     def wait_for_element_present(self, locator, timeout=3):
         self.log_action(f"Ожидание присутствия элемента: {locator}")
         try:
@@ -52,28 +43,8 @@ class BasePage:
         )
         return self.browser.find_elements(*locator)
 
-    def wait_for_invisibility_of_element(self, locator, timeout=10):
-        self.log_action(f"Ожидание исчезновения элемента: {locator}")
-        return WebDriverWait(self.browser, timeout).until(
-            EC.invisibility_of_element_located(locator)
-        )
-
     def fill_field(self, locator, value):
         self.log_action(f"Заполнение поля {locator} значением: {value}")
         field = self.wait_for_element_visible(locator)
         field.clear()
         field.send_keys(value)
-
-    def wait_text(self, title, timeout=3):
-        self.log_action(f"Ожидание загрузки элемента с текстом: {title}")
-        return WebDriverWait(self.browser, timeout).until(EC.title_is(title))
-
-    def get_text(self, locator: tuple):
-        self.log_action(f"Получение текста элемента: {locator}")
-        return self.browser.find_element(*locator).text
-
-    def wait_for_element_clickable(self, locator, timeout=3):
-        self.log_action(f"Ожидание кликабельности элемента: {locator}")
-        return WebDriverWait(self.browser, timeout).until(
-            EC.element_to_be_clickable(locator)
-        )

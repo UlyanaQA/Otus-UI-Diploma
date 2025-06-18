@@ -5,12 +5,16 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from page_objects.base_page import BasePage
 
+
 class HomePage(BasePage):
     SEARCH_SUBMIT = (By.XPATH, '//button[@type="submit"]')
     SEARCH_INPUT = (By.CLASS_NAME, "search-input")
     SEARCH_RESULTS = (By.CLASS_NAME, "booklink")
-    BOOK_TITLE = (By.XPATH, "//span[@class='title' and contains(text(), 'The Adventures of Sherlock Holmes')]")
-    NO_RESULTS_MESSAGE = (By.XPATH, "//*[contains(text(), 'No results found')]")
+    BOOK_TITLE = (
+        By.XPATH,
+        "//span[@class='title' and contains(text(), 'The Adventures of Sherlock Holmes')]",
+    )
+    NO_RESULTS_MESSAGE = (By.XPATH, "//*[contains(text(), 'No records found')]")
     TOP_BOOKS = (By.XPATH, "/html/body/div[1]/div/div[1]")
 
     def is_search_btn_present(self):
@@ -41,7 +45,8 @@ class HomePage(BasePage):
     def results_contain(self):
         try:
             WebDriverWait(self.browser, 10).until(
-                EC.presence_of_element_located(self.SEARCH_RESULTS))
+                EC.presence_of_element_located(self.SEARCH_RESULTS)
+            )
             return True
         except TimeoutException:
             return False
@@ -56,6 +61,7 @@ class HomePage(BasePage):
     def no_results_found(self):
         try:
             return WebDriverWait(self.browser, 5).until(
-                EC.presence_of_element_located(self.NO_RESULTS_MESSAGE))
+                EC.presence_of_element_located(self.NO_RESULTS_MESSAGE)
+            )
         except TimeoutException:
             return True

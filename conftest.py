@@ -30,7 +30,6 @@ def pytest_addoption(parser):
 def browser(request):
     browser_name = request.config.getoption("browser")
     headless = request.config.getoption("headless")
-    url = request.config.getoption("--url")
 
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
@@ -39,22 +38,26 @@ def browser(request):
         options = ChromeOptions()
         if headless:
             options.add_argument("--headless=new")
-        options.add_argument('--disable-gpu')
-        options.add_argument('--no-sandbox')
-        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument("--disable-gpu")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
 
         # Уникальная папка для профиля
         tmp_dir = tempfile.mkdtemp()
         options.add_argument(f"--user-data-dir={tmp_dir}")
 
-        logger.info(f"инициализация {browser_name} браузера в режиме {'headless' if headless else 'normal'}")
+        logger.info(
+            f"инициализация {browser_name} браузера в режиме {'headless' if headless else 'normal'}"
+        )
         driver = webdriver.Chrome(options=options)
 
     elif browser_name in ["edge", "ed"]:
         options = EdgeOptions()
         if headless:
             options.add_argument("--headless")
-        logger.info(f"инициализация {browser_name} браузера в режиме {'headless' if headless else 'normal'}")
+        logger.info(
+            f"инициализация {browser_name} браузера в режиме {'headless' if headless else 'normal'}"
+        )
         driver = webdriver.Edge(options=options)
     else:
         raise ValueError(f"Браузер {browser_name} не поддерживается")
@@ -66,6 +69,7 @@ def browser(request):
 
     request.addfinalizer(fin)
     return driver
+
 
 @pytest.fixture
 def logger(request):
@@ -89,14 +93,18 @@ def home_page(browser, base_url, logger):
     page.open(homepage_url)
     return page
 
+
 @pytest.fixture
 def categories_page(browser, base_url, logger):
     page = CategoriesPage(browser)
     categoriespage_url = f"{base_url}/ebooks/categories"
 
-    logger.info(f"Открытие страницы категорий книг: {categoriespage_url}/ebooks/categories")
+    logger.info(
+        f"Открытие страницы категорий книг: {categoriespage_url}/ebooks/categories"
+    )
     page.open(categoriespage_url)
     return page
+
 
 @pytest.fixture
 def russian_interest_page(browser, base_url, logger):
@@ -107,6 +115,7 @@ def russian_interest_page(browser, base_url, logger):
     page.open(russianpage_url)
     return page
 
+
 @pytest.fixture
 def onegin_page(browser, base_url, logger):
     page = OneginPage(browser)
@@ -116,6 +125,7 @@ def onegin_page(browser, base_url, logger):
     page.open(oneginpage_url)
     return page
 
+
 @pytest.fixture
 def advancedsearch_page(browser, base_url, logger):
     page = AdvancedSearchPage(browser)
@@ -124,6 +134,7 @@ def advancedsearch_page(browser, base_url, logger):
     logger.info(f"Открытие страницы Advanced Search: {advancedsearch_url}")
     page.open(advancedsearch_url)
     return page
+
 
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):

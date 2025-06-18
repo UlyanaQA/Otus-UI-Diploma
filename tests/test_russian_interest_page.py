@@ -1,15 +1,16 @@
 import allure
 import logging
 
+
 @allure.epic("Страница Russian Interest")
 @allure.feature("Элементы страницы Russian Interest")
 @allure.story("Проверка наличия элементов на странице Russian Interest")
 def test_book_onegin(russian_interest_page):
     try:
         with allure.step("Проверка наличия книги Eugene Oneguine [Onegin]"):
-            assert russian_interest_page.check_book_onegin(), (
-                "На странице не найдена книга Eugene Oneguine [Onegin]"
-            )
+            assert (
+                russian_interest_page.check_book_onegin()
+            ), "На странице не найдена книга Eugene Oneguine [Onegin]"
     except AssertionError as e:
         logging.error(f"Ошибка в тесте: {str(e)}")
         allure.attach(
@@ -19,10 +20,10 @@ def test_book_onegin(russian_interest_page):
         )
         raise AssertionError(str(e))
 
+
 @allure.feature("Сортировка книг")
 @allure.story("Проверка сортировки по алфавиту")
 def test_sort_books_alphabetically(russian_interest_page):
-
     with allure.step("Клик по кнопке сортировки по алфавиту"):
         russian_interest_page.sort_by_title()
 

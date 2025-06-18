@@ -1,16 +1,14 @@
 from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
 from page_objects.base_page import BasePage
+
 
 class OneginPage(BasePage):
     BOOK_TITLE = (By.XPATH, '//*[@id="book_title"]')
     DOWNLOAD_BTN = (By.XPATH, '//*[@id="download_options_table"]/tbody/tr[3]/td[2]')
     READ_MORE_BTN = (By.XPATH, '//*[@id="read_more"]')
     SHOW_LESS_BTN = (By.XPATH, '//*[@id="download"]/div[1]/span/label[2]')
-
 
     def is_onegin_title_present(self):
         self.log_action("Проверка наличия названия книги")
@@ -45,4 +43,3 @@ class OneginPage(BasePage):
         except TimeoutException:
             self.log_action("Кнопка сокрытия информации о книге не найдена")
             return False
-
