@@ -1,6 +1,8 @@
 import logging
 import os
 import pytest
+from allure_commons._allure import attach
+from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.edge.options import Options as EdgeOptions
@@ -148,3 +150,28 @@ def pytest_runtest_makereport(item, call):
             file_name = os.path.join(screenshot_dir, f"{item.name}.png")
             browser.save_screenshot(file_name)
             print(f"\n📸 Скриншот сохранён: {file_name}")
+
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    outcome = yield
+    if call.when == "call":
+        if outcome.excinfo is not None:
+            browser = item.funcargs.get("browser")
+            if browser:
+                screenshot_dir = "screenshots"
+                os.makedirs(screenshot_dir, exist_ok=True)
+                file_name = os.path.join(screenshot_dir, f"{item.name}.png")
+                try:
+                    browser.save_screenshot(file_name)
+                    print(f"\n📸 Скриншот сохранён: {file_name}")
+                except Exception as e:
+                    print(f"❌ Не удалось сделать скриншот: {e}")
+
+                try:
+                    attach.file(
+                        browser.get_screenshot_as_png(),
+                        name=f"Screenshot: {item.name}",
+                        attachment_type=AttachmentType.PNG
+                    )
+                except Exception as e:
+                    print(f"❌ Не удалось прикрепить скриншот к Allure: {e}")
